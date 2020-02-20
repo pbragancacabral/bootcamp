@@ -1,34 +1,64 @@
 import java.util.Random;
 
-public class Game {
+class Game {
 	Prompt prompt;
-	int theRandomNumber;
-	int numberOfChances;
-	int tries;
+	int randomNumber;
+	int randomNumberUpperBound;
+	int maxTries;
+	int currentTries;
 	int guess;
-	
-	Game(Prompt prompt, int numberOfChances) {
+
+	Game(Prompt prompt, int randomNumberUpperBound, int maxTries) {
 		this.prompt = prompt;
-		this.theRandomNumber = new Random().nextInt(100) + 1;
-		this.numberOfChances = numberOfChances;
+		this.randomNumberUpperBound = randomNumberUpperBound;
+		this.randomNumber = new Random().nextInt(randomNumberUpperBound) + 1;
+		this.maxTries = maxTries;
+	}
+
+	void play() {
+		while (areTriesLeftAndGameIsNotWon()) {
+			promptForGuess();
+			displayHint();
+		}
+		displayOutcome();
+	}
+
+	boolean areTriesLeftAndGameIsNotWon() {
+		return areTriesLeft() && !gameIsWon();
 	}
 	
-	void play() {
-		while (tries < numberOfChances && guess != theRandomNumber) {
-			guess = prompt.forNumber();
-			tries++;
-			if (guess < 1 && guess > 100) {
-				prompt.displayErrorMessageForNumberOutOfRange();
-			} else if (guess < theRandomNumber) {
-				prompt.displayHintForHigherNumber();
-			} else if (guess > theRandomNumber) {
-				prompt.displayHintForLowerNumber();
-			}
+	boolean areTriesLeft() {
+		return currentTries < maxTries;
+	}
+	
+	boolean gameIsWon() {
+		return guess == randomNumber;
+	}
+	
+	void promptForGuess() {
+		guess = prompt.forNumber(randomNumberUpperBound);
+		if (isGuessOutOfBounds()) {
+			prompt.displayErrorMessageForNumberOutOfRange(randomNumberUpperBound);
+			return;
 		}
-		if (guess == theRandomNumber) {
+		currentTries++;
+	}
+
+	boolean isGuessOutOfBounds() {
+		return guess < 1 || guess > randomNumberUpperBound;
+	}
+
+	void displayHint() {
+		if (guess < randomNumber)
+			prompt.displayHintForHigherNumber();
+		else if (guess > randomNumber)
+			prompt.displayHintForLowerNumber();
+	}
+
+	void displayOutcome() {
+		if (gameIsWon())
 			prompt.displayWinMessage();
-		} else {
-			prompt.displayLoseMessage(theRandomNumber);
-		}
+		else
+			prompt.displayLoseMessage(randomNumber);
 	}
 }

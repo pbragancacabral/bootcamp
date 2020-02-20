@@ -1,29 +1,30 @@
 import java.util.Scanner;
 
-public class Prompt {
-	int forNumber() {
-		System.out.print("Guess a number? ");
+class Prompt {
+	int forNumber(int randomNumberUpperBound) {
+		System.out.print("Pick a number between 1 and " + randomNumberUpperBound +": ");
+		Scanner scanner = new Scanner(System.in);
 		return new Scanner(System.in).nextInt();
 	}
 
-	public void displayWinMessage() {
+	void displayWinMessage() {
 		System.out.println("You win!");
 	}
 
-	public void displayLoseMessage(int theRandomNumber) {
+	void displayLoseMessage(int theRandomNumber) {
 		System.out.println("You lose, the number to guess was " + theRandomNumber);
 	}
 
-	public void displayHintForLowerNumber() {
+	void displayHintForLowerNumber() {
 		System.out.println("Please pick a lower number");
 		
 	}
 
-	public void displayHintForHigherNumber() {
+	void displayHintForHigherNumber() {
 		System.out.println("Please pick a higher number");
 	}
 
-	public void displayErrorMessageForNumberOutOfRange() {
-		System.out.println("Your guess is not between 1 and 100, please try again");
+	void displayErrorMessageForNumberOutOfRange(int theRandomNumberUpperBound) {
+		System.out.println("Your guess is not between 1 and " + theRandomNumberUpperBound + ", please try again");
 	}
 }
